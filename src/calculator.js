@@ -6,6 +6,9 @@
  *   - : Subtraction
  *   * : Multiplication (×)
  *   / : Division (÷)
+ *   % : Modulo
+ *   ^ : Power
+ *   sqrt : Square root
  *
  * Usage: node calculator.js <number> <operator> <number>
  * Example: node calculator.js 10 + 5
@@ -34,6 +37,27 @@ function divide(a, b) {
   return a / b;
 }
 
+// Modulo
+function modulo(a, b) {
+  if (b === 0) {
+    throw new Error("Cannot modulo by zero.");
+  }
+  return a % b;
+}
+
+// Power
+function power(base, exponent) {
+  return Math.pow(base, exponent);
+}
+
+// Square root
+function squareRoot(n) {
+  if (n < 0) {
+    throw new Error("Cannot calculate square root of a negative number.");
+  }
+  return Math.sqrt(n);
+}
+
 // Calculate based on operator
 function calculate(num1, operator, num2) {
   switch (operator) {
@@ -45,8 +69,12 @@ function calculate(num1, operator, num2) {
       return multiply(num1, num2);
     case "/":
       return divide(num1, num2);
+    case "%":
+      return modulo(num1, num2);
+    case "^":
+      return power(num1, num2);
     default:
-      throw new Error(`Unknown operator '${operator}'. Use +, -, *, or /`);
+      throw new Error(`Unknown operator '${operator}'. Use +, -, *, /, %, or ^`);
   }
 }
 
@@ -54,28 +82,50 @@ function calculate(num1, operator, num2) {
 if (require.main === module) {
   const args = process.argv.slice(2);
 
-  if (args.length !== 3) {
+  if (args.length < 2 || args.length > 3) {
     console.log("Usage: node calculator.js <number> <operator> <number>");
-    console.log("Operators: + - * /");
+    console.log("Operators: + - * / % ^ or use 'sqrt' with one number");
     process.exit(1);
   }
 
-  const num1 = parseFloat(args[0]);
-  const operator = args[1];
-  const num2 = parseFloat(args[2]);
-
-  if (isNaN(num1) || isNaN(num2)) {
-    console.log("Error: Both operands must be valid numbers.");
-    process.exit(1);
-  }
+  const operator = args.length === 2 ? args[0] : args[1];
 
   try {
-    const result = calculate(num1, operator, num2);
-    console.log(`${num1} ${operator} ${num2} = ${result}`);
+    if (operator === "sqrt") {
+      const num = args.length === 2 ? parseFloat(args[1]) : parseFloat(args[0]);
+
+      if (isNaN(num)) {
+        console.log("Error: Operand must be a valid number.");
+        process.exit(1);
+      }
+
+      const result = squareRoot(num);
+      console.log(`sqrt ${num} = ${result}`);
+    } else {
+      const num1 = parseFloat(args[0]);
+      const num2 = parseFloat(args[2]);
+
+      if (isNaN(num1) || isNaN(num2)) {
+        console.log("Error: Both operands must be valid numbers.");
+        process.exit(1);
+      }
+
+      const result = calculate(num1, operator, num2);
+      console.log(`${num1} ${operator} ${num2} = ${result}`);
+    }
   } catch (error) {
     console.log(`Error: ${error.message}`);
     process.exit(1);
   }
 }
 
-module.exports = { add, subtract, multiply, divide, calculate };
+module.exports = {
+  add,
+  subtract,
+  multiply,
+  divide,
+  modulo,
+  power,
+  squareRoot,
+  calculate,
+};
