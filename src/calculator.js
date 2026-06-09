@@ -127,8 +127,28 @@ if (require.main === module) {
   }
 
   try {
-    const result = calculate(num1, operator, num2);
-    console.log(`${num1} ${operator} ${num2} = ${result}`);
+    if (operator === "sqrt") {
+      const num = args.length === 2 ? parseFloat(args[1]) : parseFloat(args[0]);
+
+      if (isNaN(num)) {
+        console.log("Error: Operand must be a valid number.");
+        process.exit(1);
+      }
+
+      const result = squareRoot(num);
+      console.log(`sqrt ${num} = ${result}`);
+    } else {
+      const num1 = parseFloat(args[0]);
+      const num2 = parseFloat(args[2]);
+
+      if (isNaN(num1) || isNaN(num2)) {
+        console.log("Error: Both operands must be valid numbers.");
+        process.exit(1);
+      }
+
+      const result = calculate(num1, operator, num2);
+      console.log(`${num1} ${operator} ${num2} = ${result}`);
+    }
   } catch (error) {
     console.log(`Error: ${error.message}`);
     process.exit(1);
