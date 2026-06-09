@@ -122,12 +122,12 @@ describe("Division", () => {
 
 // Modulo tests
 describe("Modulo", () => {
-  test("modulo of two positive numbers", () => {
+  test("returns remainder for positive numbers", () => {
     expect(modulo(10, 3)).toBe(1);
   });
 
-  test("modulo with even division returns zero", () => {
-    expect(modulo(12, 4)).toBe(0);
+  test("returns zero when divisible", () => {
+    expect(modulo(20, 5)).toBe(0);
   });
 
   test("throws error on modulo by zero", () => {
@@ -137,31 +137,31 @@ describe("Modulo", () => {
 
 // Power tests
 describe("Power", () => {
-  test("power raises base to exponent", () => {
+  test("calculates positive exponent", () => {
     expect(power(2, 3)).toBe(8);
   });
 
-  test("power with zero exponent returns one", () => {
-    expect(power(5, 0)).toBe(1);
+  test("calculates zero exponent", () => {
+    expect(power(10, 0)).toBe(1);
   });
 
-  test("power with negative exponent", () => {
-    expect(power(2, -1)).toBe(0.5);
+  test("calculates fractional exponent", () => {
+    expect(power(9, 0.5)).toBe(3);
   });
 });
 
 // Square root tests
-describe("Square root", () => {
-  test("square root of perfect square", () => {
-    expect(squareRoot(49)).toBe(7);
+describe("Square Root", () => {
+  test("calculates square root of positive number", () => {
+    expect(squareRoot(81)).toBe(9);
   });
 
-  test("square root of zero", () => {
+  test("calculates square root of zero", () => {
     expect(squareRoot(0)).toBe(0);
   });
 
-  test("throws error for negative numbers in square root", () => {
-    expect(() => squareRoot(-1)).toThrow("Cannot calculate square root of a negative number.");
+  test("throws error for negative number", () => {
+    expect(() => squareRoot(-9)).toThrow("Cannot take square root of a negative number.");
   });
 });
 
@@ -183,12 +183,16 @@ describe("Calculate (operator dispatch)", () => {
     expect(calculate(20, "/", 5)).toBe(4);
   });
 
-  test("handles % operator for modulo", () => {
+  test("handles % operator", () => {
     expect(calculate(10, "%", 3)).toBe(1);
   });
 
-  test("handles ^ operator for power", () => {
-    expect(calculate(2, "^", 3)).toBe(8);
+  test("handles ^ operator", () => {
+    expect(calculate(2, "^", 4)).toBe(16);
+  });
+
+  test("handles sqrt operator", () => {
+    expect(calculate(49, "sqrt")).toBe(7);
   });
 
   test("throws error for unknown operator", () => {
@@ -197,5 +201,13 @@ describe("Calculate (operator dispatch)", () => {
 
   test("throws error for division by zero via calculate", () => {
     expect(() => calculate(10, "/", 0)).toThrow("Cannot divide by zero.");
+  });
+
+  test("throws error for modulo by zero via calculate", () => {
+    expect(() => calculate(10, "%", 0)).toThrow("Cannot modulo by zero.");
+  });
+
+  test("throws error for negative square root via calculate", () => {
+    expect(() => calculate(-1, "sqrt")).toThrow("Cannot take square root of a negative number.");
   });
 });
