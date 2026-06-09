@@ -6,8 +6,13 @@
  *   - : Subtraction
  *   * : Multiplication (×)
  *   / : Division (÷)
+ *   % : Modulo
+ *   ^ : Exponentiation (power)
+ *   sqrt : Square root
  *
- * Usage: node calculator.js <number> <operator> <number>
+ * Usage:
+ *   node calculator.js <number> <operator> <number>
+ *   node calculator.js sqrt <number>
  * Example: node calculator.js 10 + 5
  */
 
@@ -34,6 +39,27 @@ function divide(a, b) {
   return a / b;
 }
 
+// Modulo
+function modulo(a, b) {
+  if (b === 0) {
+    throw new Error("Cannot modulo by zero.");
+  }
+  return a % b;
+}
+
+// Exponentiation (power)
+function power(base, exponent) {
+  return base ** exponent;
+}
+
+// Square root
+function squareRoot(n) {
+  if (n < 0) {
+    throw new Error("Cannot take square root of a negative number.");
+  }
+  return Math.sqrt(n);
+}
+
 // Calculate based on operator
 function calculate(num1, operator, num2) {
   switch (operator) {
@@ -45,8 +71,14 @@ function calculate(num1, operator, num2) {
       return multiply(num1, num2);
     case "/":
       return divide(num1, num2);
+    case "%":
+      return modulo(num1, num2);
+    case "^":
+      return power(num1, num2);
+    case "sqrt":
+      return squareRoot(num1);
     default:
-      throw new Error(`Unknown operator '${operator}'. Use +, -, *, or /`);
+      throw new Error(`Unknown operator '${operator}'. Use +, -, *, /, %, ^, or sqrt`);
   }
 }
 
@@ -54,10 +86,35 @@ function calculate(num1, operator, num2) {
 if (require.main === module) {
   const args = process.argv.slice(2);
 
-  if (args.length !== 3) {
+  if (args.length !== 2 && args.length !== 3) {
     console.log("Usage: node calculator.js <number> <operator> <number>");
-    console.log("Operators: + - * /");
+    console.log("Usage: node calculator.js sqrt <number>");
+    console.log("Operators: + - * / % ^ sqrt");
     process.exit(1);
+  }
+
+  if (args.length === 2) {
+    const operator = args[0];
+    const num = parseFloat(args[1]);
+
+    if (operator !== "sqrt") {
+      console.log("Error: Two-argument usage only supports sqrt.");
+      process.exit(1);
+    }
+
+    if (isNaN(num)) {
+      console.log("Error: Operand must be a valid number.");
+      process.exit(1);
+    }
+
+    try {
+      const result = calculate(num, operator);
+      console.log(`${operator} ${num} = ${result}`);
+    } catch (error) {
+      console.log(`Error: ${error.message}`);
+      process.exit(1);
+    }
+    process.exit(0);
   }
 
   const num1 = parseFloat(args[0]);
@@ -78,4 +135,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { add, subtract, multiply, divide, calculate };
+module.exports = { add, subtract, multiply, divide, modulo, power, squareRoot, calculate };

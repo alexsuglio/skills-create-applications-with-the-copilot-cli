@@ -1,4 +1,13 @@
-const { add, subtract, multiply, divide, calculate } = require("../calculator");
+const {
+  add,
+  subtract,
+  multiply,
+  divide,
+  modulo,
+  power,
+  squareRoot,
+  calculate,
+} = require("../calculator");
 
 // Tests based on image examples: 2+3, 10-4, 45*2, 20/5
 describe("Calculator - Image Examples", () => {
@@ -111,6 +120,51 @@ describe("Division", () => {
   });
 });
 
+// Modulo tests
+describe("Modulo", () => {
+  test("returns remainder for positive numbers", () => {
+    expect(modulo(10, 3)).toBe(1);
+  });
+
+  test("returns zero when divisible", () => {
+    expect(modulo(20, 5)).toBe(0);
+  });
+
+  test("throws error on modulo by zero", () => {
+    expect(() => modulo(10, 0)).toThrow("Cannot modulo by zero.");
+  });
+});
+
+// Power tests
+describe("Power", () => {
+  test("calculates positive exponent", () => {
+    expect(power(2, 3)).toBe(8);
+  });
+
+  test("calculates zero exponent", () => {
+    expect(power(10, 0)).toBe(1);
+  });
+
+  test("calculates fractional exponent", () => {
+    expect(power(9, 0.5)).toBe(3);
+  });
+});
+
+// Square root tests
+describe("Square Root", () => {
+  test("calculates square root of positive number", () => {
+    expect(squareRoot(81)).toBe(9);
+  });
+
+  test("calculates square root of zero", () => {
+    expect(squareRoot(0)).toBe(0);
+  });
+
+  test("throws error for negative number", () => {
+    expect(() => squareRoot(-9)).toThrow("Cannot take square root of a negative number.");
+  });
+});
+
 // Calculate function tests
 describe("Calculate (operator dispatch)", () => {
   test("handles + operator", () => {
@@ -129,11 +183,31 @@ describe("Calculate (operator dispatch)", () => {
     expect(calculate(20, "/", 5)).toBe(4);
   });
 
+  test("handles % operator", () => {
+    expect(calculate(10, "%", 3)).toBe(1);
+  });
+
+  test("handles ^ operator", () => {
+    expect(calculate(2, "^", 4)).toBe(16);
+  });
+
+  test("handles sqrt operator", () => {
+    expect(calculate(49, "sqrt")).toBe(7);
+  });
+
   test("throws error for unknown operator", () => {
-    expect(() => calculate(5, "%", 2)).toThrow("Unknown operator");
+    expect(() => calculate(5, "unknown", 2)).toThrow("Unknown operator");
   });
 
   test("throws error for division by zero via calculate", () => {
     expect(() => calculate(10, "/", 0)).toThrow("Cannot divide by zero.");
+  });
+
+  test("throws error for modulo by zero via calculate", () => {
+    expect(() => calculate(10, "%", 0)).toThrow("Cannot modulo by zero.");
+  });
+
+  test("throws error for negative square root via calculate", () => {
+    expect(() => calculate(-1, "sqrt")).toThrow("Cannot take square root of a negative number.");
   });
 });
